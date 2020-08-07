@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator/check')
 const Post = require('../models/posts');
+const socket = require('../socket')
 
 exports.getfeeds = async (req, res, next) => {
     console.log("AAAAAAAAAAAAAAA")
@@ -69,7 +70,7 @@ exports.addfeeds = (req, res, next) => {
             "name": "Tushar"
         }
     })
-
+    socket.getIO().emit('posts', { action: 'create', post: post })
     post.save().then(result => {
 
         res.status(201).json({

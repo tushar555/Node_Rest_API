@@ -33,7 +33,7 @@ app.use(parser.json());
 app.use(multer({ storage: fileStorage }).single('image'));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', "*");
+    res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000");
     res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE, PATCH, OPTIONS");
     res.setHeader('Access-Control-Allow-Headers', "Content-Type", "Authorization");
     next()
@@ -52,7 +52,11 @@ app.use((error, req, res, next) => {
 
 mongoose.connect('mongodb+srv://tusharsaindane02:Puv2Ki27dem43Kqb@cluster0-golou.mongodb.net/messages?retryWrites=true&w=majority').then((result) => {
     // console.log(result, "Connect")
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require('./socket').init(server);
+    io.on('connection', socket => {
+        console.log('Client Success')
+    })
 }).catch((err) => {
 
 })
